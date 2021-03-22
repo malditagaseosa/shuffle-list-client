@@ -6,7 +6,7 @@ import { Container, Row, Col, Alert } from 'react-bootstrap';
 import Client from '../services/api';
 import axios from 'axios';
 
-const App = () => {  
+const App = () => {
 
   const [lists, setLists] = React.useState([]);
 

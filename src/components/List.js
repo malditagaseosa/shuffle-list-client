@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button, ButtonGroup, Badge, Modal, Form } from 'react-bootstrap';
 import Client from '../services/api';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const List = (props) => {
     let apiclient = Client();
@@ -55,8 +56,12 @@ const List = (props) => {
             </Card.Body>
             <Card.Footer>
                 <ButtonGroup>
-                    <Button onClick={ () => { setShowElementForm(true) } } variant="primary">add to list</Button>
-                    <Button variant="success"> Pick random </Button>
+                    <Button onClick={ () => { setShowElementForm(true) } } variant="primary">
+                        <FontAwesomeIcon icon={ ['fas', 'plus'] }></FontAwesomeIcon>
+                    </Button>
+                    <Button variant="success">
+                        <FontAwesomeIcon icon={ ['fas', 'random'] }></FontAwesomeIcon>
+                    </Button>
                 </ButtonGroup>
             </Card.Footer>
         </Card>
