@@ -19,6 +19,19 @@ const List = (props) => {
             console.log(error);
         }        
     };
+    const handleRemoveElementFromList = async (elementIndex) => {
+        try {
+            let result = await apiclient.removeListElement(id, elementIndex);
+            if (result === 200) {
+                let newArray =  listElements.filter((item, index) => { return index !== elementIndex })             
+                setListElements(newArray);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+
     return (
         <Card>
             <Modal show={showElementForm} onHide={ () => { setShowElementForm(false) } }>
@@ -51,7 +64,7 @@ const List = (props) => {
             <Card.Title className="pt-3 pl-3 pb-0">{ title }</Card.Title>            
             <Card.Body>                
                 { listElements.map((item, index) => {
-                    return (<Badge key={index} className="px-2 py-2 my-1 mx-1" variant="dark">{item.title}</Badge>)
+                    return (<Badge key={index} className="px-2 py-2 my-1 mx-1" variant="dark">{item.title}&nbsp;<FontAwesomeIcon cursor="pointer" onClick={ () => { handleRemoveElementFromList(index) } } className="ml-2 mr-1" size="xs" icon={ ['fas', 'trash'] } /></Badge>)
                 }) }                
             </Card.Body>
             <Card.Footer>
@@ -60,7 +73,7 @@ const List = (props) => {
                         <FontAwesomeIcon icon={ ['fas', 'plus'] }></FontAwesomeIcon>
                     </Button>
                     <Button variant="success">
-                        <FontAwesomeIcon icon={ ['fas', 'random'] }></FontAwesomeIcon>
+                        <FontAwesomeIcon icon={ ['fas', 'random'] } />
                     </Button>
                 </ButtonGroup>
             </Card.Footer>

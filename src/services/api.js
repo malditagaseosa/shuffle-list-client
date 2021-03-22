@@ -8,8 +8,7 @@ const Client = () => {
 
     let getLists = async (source = false) => {
         try {
-            let response = await _client.get('', {cancelToken: source.token});
-            console.log(response);
+            let response = await _client.get('', {cancelToken: source.token});            
             if (response.status === 200) {
                 return response.data;
             }
@@ -21,7 +20,6 @@ const Client = () => {
     let addListElement = async (listId, newElement) => {
         try {
             let response = await _client.post(`lists/${listId}/elements/`, newElement);
-            console.log(response);
             return response.data;
         } catch (error) {
             console.log(error);
@@ -29,11 +27,23 @@ const Client = () => {
 
         return false;
     };
+    
+    let removeListElement = async (listId, elementIndex) => {
+        try {
+            let response = await _client.delete(`lists/${listId}/elements/${elementIndex}`);
+            return response.status;
+        } catch (error) {
+            console.log(error);
+        }
+
+        return false;
+    }
 
 
     return {
         getLists,
-        addListElement
+        addListElement,
+        removeListElement,
     };
 };
 
