@@ -1,5 +1,4 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/App.css';
 import List from './List';
 import { Container, Row, Col, Alert } from 'react-bootstrap';
