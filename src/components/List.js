@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const List = (props) => {
     let apiclient = Client();
+    let { handleDelete } = props;
     let  { title, elements, id } = props.model;
     const [listElements, setListElements] = React.useState(elements);
     const [showElementForm, setShowElementForm] = React.useState(false);
@@ -74,6 +75,9 @@ const List = (props) => {
                     </Button>
                     <Button variant="success">
                         <FontAwesomeIcon icon={ ['fas', 'random'] } />
+                    </Button>
+                    <Button variant="danger" onClick={ () => { handleDelete(id) } } >
+                        <FontAwesomeIcon icon={ ['fas', 'trash'] } />
                     </Button>
                 </ButtonGroup>
             </Card.Footer>

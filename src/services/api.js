@@ -39,11 +39,23 @@ const Client = () => {
         return false;
     }
 
+    let deleteList = async (listId) => {
+        try {
+            let response = await _client.delete(`lists/${listId}/`);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+
+        return false;
+    }
+
 
     return {
         getLists,
         addListElement,
         removeListElement,
+        deleteList
     };
 };
 

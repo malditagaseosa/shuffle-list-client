@@ -8,12 +8,23 @@ import axios from 'axios';
 const App = () => {
 
   const [lists, setLists] = React.useState([]);
+  const apiClient = Client();
+
+  const handleDeleteList = async (listId) => {
+    try {
+        let result = await apiClient.deleteList(listId);
+        if (result !== undefined && result) {
+          setLists(lists.filter(item => item.id !== listId));
+        }
+    } catch (error) {
+        console.log(error);
+    }
+  }
 
   React.useEffect(() => {
     const source = axios.CancelToken.source();
-    let fetchData = async () => { 
-      let apiClient = Client();     
-      let data = await apiClient.getLists(source);
+    let fetchData = async () => {    
+      let data = await Client().getLists(source);
       data = (Array.isArray(data)) ? data : [];
       setLists(data);      
     }
@@ -27,7 +38,7 @@ const App = () => {
         { lists.map((item) => {
           return (
             <Col key={item.id} xs={12} md={4} sm={12}>
-              <List model={item} />
+              <List handleDelete={ handleDeleteList } model={item} />
             </Col>
           )
         }) }
