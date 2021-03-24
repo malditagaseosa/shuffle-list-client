@@ -50,12 +50,24 @@ const Client = () => {
         return false;
     }
 
+    let createList = async (data) => {
+        try {
+            let response = await _client.post('lists/', data);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+
+        return false;
+    } 
+
 
     return {
         getLists,
         addListElement,
         removeListElement,
-        deleteList
+        deleteList,
+        createList
     };
 };
 

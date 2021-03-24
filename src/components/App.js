@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/App.css';
 import List from './List';
-import { Container, Row, Col, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Alert, Button } from 'react-bootstrap';
 import Client from '../services/api';
 import axios from 'axios';
 
@@ -20,6 +20,19 @@ const App = () => {
         console.log(error);
     }
   }
+  const handleNewList = async () => {
+    let title = prompt("¿Cual es el titulo de la lista?");
+    try {
+      if (title) {
+        let result = await apiClient.createList({title});      
+        if (result) {        
+          setLists([...lists, {id: result, title, elements: []}]);
+        }
+      }      
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   React.useEffect(() => {
     const source = axios.CancelToken.source();
@@ -35,19 +48,26 @@ const App = () => {
   return (
     <Container className="mt-4">
       <Row>
-        { lists.map((item) => {
-          return (
-            <Col key={item.id} xs={12} md={4} sm={12}>
-              <List handleDelete={ handleDeleteList } model={item} />
-            </Col>
-          )
-        }) }
-        { lists.length > 0 
-          ? "" 
-          : <Alert className="center mx-auto" variant="danger">
-              No se han encontrado listas para mostrar
-            </Alert> 
-        }
+        <Col xs={12} md={2}>
+          <Button onClick={ handleNewList } className="mt-3" variant="success">Nueva lista</Button>
+        </Col>
+        <Col xs={12} md={10}>
+          <Row>
+            { lists.map((item) => {
+              return (
+                <Col className="mb-3 mt-3" key={item.id} xs={12} md={12} sm={12}>
+                  <List handleDelete={ handleDeleteList } model={item} />
+                </Col>
+              )
+            }) }
+            { lists.length > 0 
+              ? "" 
+              : <Alert className="center mx-auto" variant="danger">
+                  No se han encontrado listas para mostrar
+                </Alert> 
+            }
+          </Row>
+        </Col>
       </Row>
     </Container>
   );
