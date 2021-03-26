@@ -26,7 +26,7 @@ const App = () => {
       if (title) {
         let result = await apiClient.createList({title});      
         if (result) {        
-          setLists([...lists, {id: result, title, elements: []}]);
+          setLists([...lists, {id: result, title, items: []}]);
         }
       }      
     } catch (error) {

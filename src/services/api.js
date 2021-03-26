@@ -17,9 +17,9 @@ const Client = () => {
         }
     };
 
-    let addListElement = async (listId, newElement) => {
+    let addListItem = async (listId, newItem) => {
         try {
-            let response = await _client.post(`lists/${listId}/elements/`, newElement);
+            let response = await _client.post(`lists/${listId}/items/`, newItem);
             return response.data;
         } catch (error) {
             console.log(error);
@@ -28,9 +28,9 @@ const Client = () => {
         return false;
     };
     
-    let removeListElement = async (listId, elementIndex) => {
+    let removeListItem = async (listId, itemIndex) => {
         try {
-            let response = await _client.delete(`lists/${listId}/elements/${elementIndex}`);
+            let response = await _client.delete(`lists/${listId}/items/${itemIndex}`);
             return response.status;
         } catch (error) {
             console.log(error);
@@ -64,8 +64,8 @@ const Client = () => {
 
     return {
         getLists,
-        addListElement,
-        removeListElement,
+        addListItem,
+        removeListItem,
         deleteList,
         createList
     };
