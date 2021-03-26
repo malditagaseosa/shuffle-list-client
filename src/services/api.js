@@ -2,7 +2,7 @@ import Axios from 'axios';
 
 const Client = () => {
     const _client = Axios.create({
-        baseURL: 'http://localhost:5000/',
+        baseURL: process.env.REACT_APP_API_HOST,
         withCredentials: false
     })
 
