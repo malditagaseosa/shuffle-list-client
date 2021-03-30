@@ -46,7 +46,7 @@ const App = () => {
   }, []);
 
   return (
-    <Container className="mt-4">
+    <Container className="mt-4 mb-5">
       <Row>
         <Col xs={12} md={2}>
           <Button onClick={ handleNewList } className="mt-3" variant="success">Nueva lista</Button>
