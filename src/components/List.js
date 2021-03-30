@@ -64,7 +64,12 @@ const List = (props) => {
             </Modal>
             <Card.Title className="pt-3 pl-3 pb-0">{ title }</Card.Title>            
             <Card.Body>                
-                { listItems.map((item, index) => {
+                { listItems.map((item, index) => 
+                {
+                    if (item.url) {
+                        return (<a rel="noreferrer" target="_blank" href={item.url} key={index}><Badge className="px-2 py-2 my-1 mx-1" variant="dark">{item.title}&nbsp;<FontAwesomeIcon cursor="pointer" onClick={ () => { handleRemoveItemFromList(index) } } className="ml-2 mr-1" size="xs" icon={ ['fas', 'trash'] } /></Badge></a>);
+                    }
+
                     return (<Badge key={index} className="px-2 py-2 my-1 mx-1" variant="dark">{item.title}&nbsp;<FontAwesomeIcon cursor="pointer" onClick={ () => { handleRemoveItemFromList(index) } } className="ml-2 mr-1" size="xs" icon={ ['fas', 'trash'] } /></Badge>)
                 }) }                
             </Card.Body>
