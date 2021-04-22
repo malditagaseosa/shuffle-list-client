@@ -70,7 +70,7 @@ const List = (props) => {
                         return (<a rel="noreferrer" target="_blank" href={item.url} key={index}><Badge className="px-2 py-2 my-1 mx-1" variant="dark">{item.title}&nbsp;<FontAwesomeIcon cursor="pointer" onClick={ () => { handleRemoveItemFromList(index) } } className="ml-2 mr-1" size="xs" icon={ ['fas', 'trash'] } /></Badge></a>);
                     }
 
-                    return (<Badge key={index} className="px-2 py-2 my-1 mx-1" variant="dark">{item.title}&nbsp;<FontAwesomeIcon cursor="pointer" onClick={ () => { handleRemoveItemFromList(index) } } className="ml-2 mr-1" size="xs" icon={ ['fas', 'trash'] } /></Badge>)
+                    return (<Badge key={index} className="px-2 py-2 my-1 mx-1 text-break" variant="dark">{item.title}&nbsp;<FontAwesomeIcon cursor="pointer" onClick={ () => { handleRemoveItemFromList(index) } } className="ml-2 mr-1" size="xs" icon={ ['fas', 'trash'] } /></Badge>)
                 }) }                
             </Card.Body>
             <Card.Footer>

@@ -59,7 +59,18 @@ const Client = () => {
         }
 
         return false;
-    } 
+    }
+
+    let login = async (data) => {
+        try {
+            let response = await _client.post('login/', data);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+
+        return false;
+    }
 
 
     return {
@@ -67,7 +78,8 @@ const Client = () => {
         addListItem,
         removeListItem,
         deleteList,
-        createList
+        createList,
+        login
     };
 };
 
