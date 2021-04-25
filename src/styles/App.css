@@ -1,4 +1,11 @@
+#login-title {
+  color: #fff;
+  font-weight: bold;
+}
+
 .card .badge {
   font-size: 18px;
   font-weight: 500;
+  text-align: left;
+  white-space: normal;
 }
