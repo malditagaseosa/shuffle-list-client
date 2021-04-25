@@ -4,7 +4,7 @@ import { Container, Row, Col, Card, Form, Button, Alert } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom';
 import { isEmpty } from '../helpers';
 
-const Login = () => {  
+const Login = () => {
   const history = useHistory();
   const [user, setUser] = React.useState('');
   const [password, setPassword] = React.useState('');
