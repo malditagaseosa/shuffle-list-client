@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, Button, ButtonGroup, Badge, Modal, Form } from 'react-bootstrap';
 import Client from '../services/api';
+import { isEmpty } from '../helpers';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const List = (props) => {
@@ -13,8 +14,9 @@ const List = (props) => {
     const handleAddItemToList = async () => {
         try {
             setShowItemForm(true);
-            let result = await apiclient.addListItem(id, itemFormValues);
-            setListItems(result);
+            let items = await apiclient.addListItem(id, itemFormValues);
+            items = isEmpty(items) || !Array.isArray(items) ? [] : items;
+            setListItems(items);
             setShowItemForm(false);
         } catch (error) {
             console.log(error);
