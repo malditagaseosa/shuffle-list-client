@@ -71,6 +71,16 @@ const Client = () => {
 
         return false;
     }
+    let pickRandomFromList = async (id) => {
+        try {
+            let response = await _client.get('shuffle/'+id);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+
+        return false;
+    }
 
 
     return {
@@ -79,7 +89,8 @@ const Client = () => {
         removeListItem,
         deleteList,
         createList,
-        login
+        login,
+        pickRandomFromList
     };
 };
 

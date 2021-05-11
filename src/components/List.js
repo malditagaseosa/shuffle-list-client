@@ -10,6 +10,8 @@ const List = (props) => {
     let  { title, items, id } = props.model;
     const [listItems, setListItems] = React.useState(items);
     const [showItemForm, setShowItemForm] = React.useState(false);
+    const [showRandomItem, setShowRandomItem] = React.useState(false);
+    const [randomItem, setRandomItem] = React.useState('');
     const [itemFormValues, setItemFormValues] = React.useState({title: '', url: ''});
     const handleAddItemToList = async () => {
         try {
@@ -33,6 +35,16 @@ const List = (props) => {
             console.log(error);
         }
     };
+    const shuffleList = async (id) => {
+        try {
+            setRandomItem('');
+            setShowRandomItem(true);
+            let item = await apiclient.pickRandomFromList(id);
+            setRandomItem(item.title);
+        } catch (error) {
+            console.log(error);
+        }        
+    }
 
 
     return (
@@ -64,6 +76,11 @@ const List = (props) => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+            <Modal show={showRandomItem} onHide={ () => { setShowRandomItem(false) } }>
+                <Modal.Body closeButton>
+                    <h2 className="text-center m-3">{ randomItem }</h2>
+                </Modal.Body>                
+            </Modal>
             <Card.Title className="pt-3 pl-3 pb-0">{ title }</Card.Title>            
             <Card.Body>                
                 { listItems.map((item, index) => 
@@ -80,7 +97,7 @@ const List = (props) => {
                     <Button onClick={ () => { setShowItemForm(true) } } variant="primary">
                         <FontAwesomeIcon icon={ ['fas', 'plus'] }></FontAwesomeIcon>
                     </Button>
-                    <Button variant="success">
+                    <Button onClick={ () => { shuffleList(id) } } variant="success">
                         <FontAwesomeIcon icon={ ['fas', 'random'] } />
                     </Button>
                     <Button variant="danger" onClick={ () => { handleDelete(id) } } >
