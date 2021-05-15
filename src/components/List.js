@@ -6,20 +6,24 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const List = (props) => {
     let apiclient = Client();
-    let { handleDelete } = props;
+
+    let { handleDeleteList } = props;
     let  { title, items, id } = props.model;
-    const [listItems, setListItems] = React.useState(items);
-    const [showItemForm, setShowItemForm] = React.useState(false);
-    const [showRandomItem, setShowRandomItem] = React.useState(false);
-    const [randomItem, setRandomItem] = React.useState('');
-    const [itemFormValues, setItemFormValues] = React.useState({title: '', url: ''});
+
+    const [listState, setListState] = React.useState({
+        items: items,
+        showItemForm: false,
+        showRandomItem: false,
+        randomItem: '',
+        itemFormValues: {title: '', url: ''}
+    });
+
     const handleAddItemToList = async () => {
-        try {
-            setShowItemForm(true);
-            let items = await apiclient.addListItem(id, itemFormValues);
+        try {            
+            setListState({...listState, showItemForm: true})
+            let items = await apiclient.addListItem(id, listState.itemFormValues);
             items = isEmpty(items) || !Array.isArray(items) ? [] : items;
-            setListItems(items);
-            setShowItemForm(false);
+            setListState({...listState, items: items, showItemForm: false});            
         } catch (error) {
             console.log(error);
         }        
@@ -28,19 +32,18 @@ const List = (props) => {
         try {
             let result = await apiclient.removeListItem(id, elementIndex);
             if (result === 200) {
-                let newArray =  listItems.filter((item, index) => { return index !== elementIndex })             
-                setListItems(newArray);
+                let newArray =  listState.items.filter((item, index) => { return index !== elementIndex })             
+                setListState({...listState, items: newArray});
             }
         } catch (error) {
             console.log(error);
         }
     };
-    const shuffleList = async (id) => {
+    const selectRandomItemFromList = async (id) => {
         try {
-            setRandomItem('');
-            setShowRandomItem(true);
-            let item = await apiclient.pickRandomFromList(id);
-            setRandomItem(item.title);
+            setListState({...listState, randomItem: ''});
+            let item = await apiclient.pickRandomFromList(id);            
+            setListState({...listState, randomItem: item.title, showRandomItem: true});            
         } catch (error) {
             console.log(error);
         }        
@@ -49,41 +52,41 @@ const List = (props) => {
 
     return (
         <Card>
-            <Modal show={showItemForm} onHide={ () => { setShowItemForm(false) } }>
+            <Modal show={listState.showItemForm} onHide={ () => { setListState({...listState, showItemForm: false}) } }>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add Element</Modal.Title>
+                    <Modal.Title>Add Item</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
                         <Form.Control
-                            onChange={ e => setItemFormValues({...itemFormValues, title: e.target.value}) }                            
+                            onChange={ e => setListState({...listState, itemFormValues: {...listState.itemFormValues, title: e.target.value}}) }
                             type="text" />
                     </Form.Group>
                     <Form.Group controlId="url">
                         <Form.Label>Url</Form.Label>
                         <Form.Control
-                            onChange={ e => setItemFormValues({...itemFormValues, url: e.target.value}) }                           
+                            onChange={ e => setListState({...listState, itemFormValues: {...listState.itemFormValues, url: e.target.value}}) }                           
                             type="text" />
                     </Form.Group>   
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={ () => { setShowItemForm(false) } }>
+                    <Button variant="secondary" onClick={ () => setListState({...listState, showItemForm: false}) }>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={ handleAddItemToList }>
+                    <Button variant="primary" onClick={ () => handleAddItemToList() }>
                         Save Changes
                     </Button>
                 </Modal.Footer>
             </Modal>
-            <Modal show={showRandomItem} onHide={ () => { setShowRandomItem(false) } }>
+            <Modal show={listState.showRandomItem} onHide={ () => setListState({...listState, showRandomItem: false}) }>
                 <Modal.Body closeButton>
-                    <h2 className="text-center m-3">{ randomItem }</h2>
+                    <h2 className="text-center m-3">{ listState.randomItem }</h2>
                 </Modal.Body>                
             </Modal>
             <Card.Title className="pt-3 pl-3 pb-0">{ title }</Card.Title>            
             <Card.Body>                
-                { listItems.map((item, index) => 
+                { listState.items.map((item, index) => 
                 {
                     if (item.url) {
                         return (<a rel="noreferrer" target="_blank" href={item.url} key={index}><Badge className="px-2 py-2 my-1 mx-1" variant="info">{item.title}&nbsp;<FontAwesomeIcon cursor="pointer" onClick={ () => { handleRemoveItemFromList(index) } } className="ml-2 mr-1" size="xs" icon={ ['fas', 'trash'] } /></Badge></a>);
@@ -94,13 +97,13 @@ const List = (props) => {
             </Card.Body>
             <Card.Footer>
                 <ButtonGroup>
-                    <Button onClick={ () => { setShowItemForm(true) } } variant="primary">
+                    <Button onClick={ () => setListState({...listState, showItemForm: true}) } variant="primary">
                         <FontAwesomeIcon icon={ ['fas', 'plus'] }></FontAwesomeIcon>
                     </Button>
-                    <Button onClick={ () => { shuffleList(id) } } variant="success">
+                    <Button onClick={ () => selectRandomItemFromList(id) } variant="success">
                         <FontAwesomeIcon icon={ ['fas', 'random'] } />
                     </Button>
-                    <Button variant="danger" onClick={ () => { handleDelete(id) } } >
+                    <Button variant="danger" onClick={ () => handleDeleteList(id) } >
                         <FontAwesomeIcon icon={ ['fas', 'trash'] } />
                     </Button>
                 </ButtonGroup>

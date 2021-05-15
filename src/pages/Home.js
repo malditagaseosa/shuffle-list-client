@@ -1,32 +1,37 @@
 import React from 'react';
 import List from '../components/List';
-import { Container, Row, Col, Alert, Button } from 'react-bootstrap';
+import { Container, Row, Col, Alert, Button, Modal, Form } from 'react-bootstrap';
 import Client from '../services/api';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
 const Home = () => {
   let history = useHistory();
-  const [lists, setLists] = React.useState([]);
   const apiClient = Client();
+
+  const [homeState, setHomeState] = React.useState({
+    lists: [],
+    showListForm: false,
+    newListName: ''
+  });  
 
   const handleDeleteList = async (listId) => {
     try {
         let result = await apiClient.deleteList(listId);
         if (result !== undefined && result) {
-          setLists(lists.filter(item => item.id !== listId));
+          setHomeState({...homeState, lists: homeState.lists.filter(item => item.id !== listId)});
         }
     } catch (error) {
         console.log(error);
     }
   }
   const handleNewList = async () => {
-    let title = prompt("¿Cual es el titulo de la lista?");
+    let title = homeState.newListName;
     try {
       if (title) {
         let result = await apiClient.createList({title});      
         if (result) {        
-          setLists([...lists, {id: result, title, items: []}]);
+          setHomeState({lists: [...homeState.lists, {id: result, title, items: []}]});
         }
       }      
     } catch (error) {
@@ -43,7 +48,7 @@ const Home = () => {
     let fetchData = async () => {    
       let data = await Client().getLists(source);
       data = (Array.isArray(data)) ? data : [];
-      setLists(data);      
+      setHomeState({...homeState, lists: data});      
     }
     fetchData();
     return () => { source.cancel() };
@@ -51,22 +56,43 @@ const Home = () => {
 
   return (
     <Container className="mt-4 mb-5">
+      <Modal show={homeState.showListForm} onHide={ () => { setHomeState({...homeState, showListForm: false}) } }>
+        <Modal.Header closeButton>
+            <Modal.Title>Add List</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <Form.Group controlId="title">
+                <Form.Label>Name</Form.Label>
+                <Form.Control
+                    onChange={ e => setHomeState({...homeState, newListName: e.target.value}) }
+                    type="text" />
+            </Form.Group>              
+        </Modal.Body>
+        <Modal.Footer>
+            <Button variant="secondary" onClick={ () => setHomeState({...homeState, showListForm: false}) }>
+                Close
+            </Button>
+            <Button variant="primary" onClick={ () => handleNewList() }>
+                Save Changes
+            </Button>
+        </Modal.Footer>
+      </Modal>
       <Row>
         <Col xs={12} md={2}>
-          <Button onClick={ handleNewList } className="mt-3" variant="success">Nueva lista</Button>
+          <Button onClick={ () => setHomeState({...homeState, showListForm: true}) } className="mt-3" variant="success">New List</Button>
           <br></br>
-          <Button onClick={ handleLogout } className="mt-3" variant="danger">Salir</Button>
+          <Button onClick={ () => handleLogout() } className="mt-3" variant="danger">Logout</Button>
         </Col>
         <Col xs={12} md={10}>
           <Row>
-            { lists.map((item) => {
+            { homeState.lists.map((item) => {
               return (
                 <Col className="mb-3 mt-3" key={item.id} xs={12} md={12} sm={12}>
-                  <List handleDelete={ handleDeleteList } model={item} />
+                  <List handleDeleteList={ handleDeleteList } model={item} />
                 </Col>
               )
             }) }
-            { lists.length > 0 
+            { homeState.lists.length > 0 
               ? "" 
               : <Alert className="center mx-auto" variant="danger">
                   No se han encontrado listas para mostrar

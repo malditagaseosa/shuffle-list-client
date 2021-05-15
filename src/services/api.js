@@ -1,14 +1,16 @@
 import Axios from 'axios';
 
 const Client = () => {
+    const TOKEN = sessionStorage.getItem('token');
+
     const _client = Axios.create({
         baseURL: process.env.REACT_APP_API_HOST,
         withCredentials: false
     })
 
-    let getLists = async (source = false) => {
+    let getLists = async (source = false) => {        
         try {
-            let response = await _client.get('', {cancelToken: source.token});            
+            let response = await _client.get('', {cancelToken: source.token, params: {token: TOKEN}});            
             if (response.status === 200) {
                 return response.data;
             }
@@ -51,6 +53,8 @@ const Client = () => {
     }
 
     let createList = async (data) => {
+        data.users = [TOKEN];
+        console.log(data);
         try {
             let response = await _client.post('lists/', data);
             return response.data;
