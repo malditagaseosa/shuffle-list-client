@@ -44,11 +44,11 @@ const Home = () => {
   }
 
   React.useEffect(() => {
-    const source = axios.CancelToken.source();
+    let source = axios.CancelToken.source();
     let fetchData = async () => {    
       let data = await Client().getLists(source);
       data = (Array.isArray(data)) ? data : [];
-      setHomeState({...homeState, lists: data});      
+      setHomeState(homeState => { return {...homeState, lists: data }});      
     }
     fetchData();
     return () => { source.cancel() };
